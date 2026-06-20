@@ -1,0 +1,24 @@
+services:
+  fotoferry:
+    container_name: fotoferry
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - CRON_SCHEDULE=${CRON_SCHEDULE:-0 * * * *}
+      - MAPPING__0__ID=alice
+      - MAPPING__0__SOURCE=/library/alice
+      - MAPPING__0__DEST=/dest/alice
+      - MAPPING__1__ID=bob
+      - MAPPING__1__SOURCE=/library/bob
+      - MAPPING__1__DEST=/dest/bob
+      - STATE_DB=/data/state.db
+      - REQUIRE_PATHS=/dest
+    volumes:
+      - ${LIBRARY_DIR:-./example/library}:/library:ro
+      - ${DEST_DIR:-./example/dest}:/dest
+      - data:/data
+    restart: unless-stopped
+
+volumes:
+  data:

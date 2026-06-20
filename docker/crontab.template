@@ -1,0 +1,3 @@
+# Job output is redirected to PID 1 so `docker logs` shows it.
+${CRON_SCHEDULE} /usr/local/bin/fotoferry > /proc/1/fd/1 2>/proc/1/fd/2
+

@@ -1,0 +1,17 @@
+# Nix / direnv
+/result
+/result-*
+.direnv/
+
+# Go build output
+/fotoferry
+*.test
+*.out
+
+# Local env & state
+.env
+/data/
+/example/
+*.db
+*.db-shm
+*.db-wal

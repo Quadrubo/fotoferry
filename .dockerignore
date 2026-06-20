@@ -1,0 +1,11 @@
+.git
+.direnv
+.envrc
+result
+result-*
+fotoferry
+*.db
+*.db-shm
+*.db-wal
+/data
+/example
