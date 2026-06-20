@@ -32,20 +32,25 @@ func TestCopyFile_CreatesParents(t *testing.T) {
 	require.NoError(t, os.WriteFile(src, []byte("data"), 0644))
 	dest := filepath.Join(dir, "a/b/c/out")
 
-	require.NoError(t, copyFile(src, dest))
+	require.NoError(t, copyFile(src, dest, 0644, 0755, -1, -1))
 	got, err := os.ReadFile(dest)
 	require.NoError(t, err)
 	assert.Equal(t, "data", string(got))
 }
 
-func TestCopyFile_Mode0644(t *testing.T) {
+func TestCopyFile_AppliesModes(t *testing.T) {
 	dir := t.TempDir()
 	src := filepath.Join(dir, "src")
 	require.NoError(t, os.WriteFile(src, []byte("data"), 0600))
-	dest := filepath.Join(dir, "out")
+	dest := filepath.Join(dir, "sub", "out")
 
-	require.NoError(t, copyFile(src, dest))
-	info, err := os.Stat(dest)
+	require.NoError(t, copyFile(src, dest, 0666, 0777, -1, -1))
+
+	fi, err := os.Stat(dest)
 	require.NoError(t, err)
-	assert.Equal(t, os.FileMode(0644), info.Mode().Perm(), "copied file must be world-readable regardless of source mode")
+	assert.Equal(t, os.FileMode(0666), fi.Mode().Perm(), "file mode applied regardless of source mode")
+
+	di, err := os.Stat(filepath.Join(dir, "sub"))
+	require.NoError(t, err)
+	assert.Equal(t, os.FileMode(0777), di.Mode().Perm(), "created dir mode applied regardless of umask")
 }

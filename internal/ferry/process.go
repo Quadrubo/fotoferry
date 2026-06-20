@@ -48,7 +48,7 @@ func processFile(db *sql.DB, cfg *config.Config, m config.Mapping, srcPath, rel 
 	if cfg.DryRun {
 		return outcomeCopied, nil
 	}
-	if err := copyFile(srcPath, filepath.Join(m.Dest, rel)); err != nil {
+	if err := copyFile(srcPath, filepath.Join(m.Dest, rel), cfg.FileMode, cfg.DirMode, cfg.OwnerUID, cfg.OwnerGID); err != nil {
 		return 0, fmt.Errorf("copy: %w", err)
 	}
 	if err := store.Record(db, m.ID, sha, rel, size, mtime); err != nil {

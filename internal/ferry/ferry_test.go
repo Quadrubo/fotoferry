@@ -33,7 +33,13 @@ func writeFile(t *testing.T, path, content string) {
 }
 
 func cfgFor(src, dest string) *config.Config {
-	return &config.Config{Mappings: []config.Mapping{{ID: "m", Source: src, Dest: dest}}}
+	return &config.Config{
+		Mappings: []config.Mapping{{ID: "m", Source: src, Dest: dest}},
+		FileMode: 0644,
+		DirMode:  0755,
+		OwnerUID: -1,
+		OwnerGID: -1,
+	}
 }
 
 func run(db *sql.DB, cfg *config.Config) Result {
