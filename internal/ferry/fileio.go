@@ -42,6 +42,12 @@ func copyFile(src, dest string) error {
 		_ = tmp.Close()
 		return err
 	}
+	// CreateTemp makes the file 0600; widen it so the destination is readable
+	// (e.g. over SMB by a non-root user).
+	if err := tmp.Chmod(0644); err != nil {
+		_ = tmp.Close()
+		return err
+	}
 	if err := tmp.Close(); err != nil {
 		return err
 	}

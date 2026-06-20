@@ -37,3 +37,15 @@ func TestCopyFile_CreatesParents(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, "data", string(got))
 }
+
+func TestCopyFile_Mode0644(t *testing.T) {
+	dir := t.TempDir()
+	src := filepath.Join(dir, "src")
+	require.NoError(t, os.WriteFile(src, []byte("data"), 0600))
+	dest := filepath.Join(dir, "out")
+
+	require.NoError(t, copyFile(src, dest))
+	info, err := os.Stat(dest)
+	require.NoError(t, err)
+	assert.Equal(t, os.FileMode(0644), info.Mode().Perm(), "copied file must be world-readable regardless of source mode")
+}
